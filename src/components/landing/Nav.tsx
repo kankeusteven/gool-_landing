@@ -3,6 +3,7 @@ import { useLanguage } from "@/lib/i18n";
 
 export const DEMO_URL = "/demo";
 export const IOS_URL = "https://testflight.apple.com/join/TBehp4Fe";
+export const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/gool-beta-community";
 
 export function LangToggle({ className = "" }: { className?: string }) {
   const { lang, setLang } = useLanguage();

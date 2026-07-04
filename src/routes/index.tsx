@@ -3,8 +3,16 @@ import { useState } from "react";
 import { Nav, DEMO_URL } from "@/components/landing/Nav";
 import { useReveal, useCountUp } from "@/components/landing/hooks";
 import { PhoneShell } from "@/components/landing/PhoneShell";
-import { HomeScreen, StreakScreen, FeedScreen, PostScreen } from "@/components/landing/ScreenMockups";
+import { PostScreen } from "@/components/landing/ScreenMockups";
+import { Icon } from "@/components/landing/icons";
 import { useLanguage } from "@/lib/i18n";
+
+import homeImg from "@/assets/screens/home.png.jpeg";
+import coachImg from "@/assets/screens/coach.png.jpeg";
+import objectiveImg from "@/assets/screens/objective.png.jpeg";
+import feedImg from "@/assets/screens/feed.png.jpeg";
+import groupsImg from "@/assets/screens/groups.png.jpeg";
+import leaderboardImg from "@/assets/screens/leaderboard.png.jpeg";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -59,9 +67,12 @@ function DemoButton({
       href={href}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noreferrer" : undefined}
-      className={`inline-flex items-center gap-2 font-medium rounded-full transition ${sz} ${styles}`}
+      className={`group inline-flex items-center gap-2 font-medium rounded-full transition-all active:scale-[0.97] hover:scale-[1.03] ${sz} ${styles}`}
     >
-      {children} <span aria-hidden>→</span>
+      {children}{" "}
+      <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+        →
+      </span>
     </a>
   );
 }
@@ -78,7 +89,6 @@ function Landing() {
       <Loop />
       <Stats />
       <Testimonials />
-      <Roadmap />
       <FAQ />
       <FinalCTA />
       <Footer />
@@ -154,26 +164,34 @@ function Hero() {
   );
 }
 
-/* ============ PHONE STACK (real screenshots) ============ */
+/* ============ PHONE STACK (real screenshots + one coded mockup) ============ */
 function PhoneStack() {
   return (
     <div className="relative inline-flex items-end justify-center">
-      {/* Back phone — Streak */}
+      {/* Back phone — leaderboard (real) */}
       <div className="hidden md:block absolute -left-44 bottom-6">
-        <PhoneShell alt="Écran Streak — 2 jours d'affilée" tilt={-8} width={230} z={1}>
-          <StreakScreen />
-        </PhoneShell>
+        <PhoneShell
+          src={leaderboardImg}
+          alt="Classement gool — XP et rang"
+          tilt={-8}
+          width={230}
+          z={1}
+        />
       </div>
-      {/* Front phone — Home */}
+      {/* Front phone — Home (real) */}
       <div className="relative">
-        <PhoneShell alt="Écran d'accueil de Gool — check-in du jour" tilt={0} width={290} z={3}>
-          <HomeScreen />
-        </PhoneShell>
+        <PhoneShell
+          src={homeImg}
+          alt="Écran d'accueil de gool — check-in du jour et objectifs"
+          tilt={0}
+          width={290}
+          z={3}
+        />
       </div>
-      {/* Right phone — Feed (mobile hidden to keep balance) */}
+      {/* Right phone — Post (coded mockup, kept because it already looks great) */}
       <div className="hidden lg:block absolute -right-44 bottom-6">
-        <PhoneShell alt="Feed communautaire de Gool" tilt={5} width={230} z={1}>
-          <FeedScreen />
+        <PhoneShell alt="Détail d'un post communauté gool" tilt={5} width={230} z={1}>
+          <PostScreen />
         </PhoneShell>
       </div>
     </div>
@@ -203,7 +221,7 @@ function ExplainerVideo() {
           <button
             type="button"
             aria-label={t.video.playLabel}
-            className="group relative w-full aspect-video rounded-[1.75rem] overflow-hidden bg-[#0F1A14] soft-shadow"
+            className="group relative w-full aspect-video rounded-[1.75rem] overflow-hidden bg-[#0F1A14] soft-shadow transition-transform hover:scale-[1.01] active:scale-[0.99]"
           >
             <div
               aria-hidden
@@ -251,9 +269,9 @@ function Pillars() {
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {t.pillars.items.map((p, i) => (
             <Reveal key={p.t} delay={i * 60}>
-              <div className="h-full rounded-2xl bg-white border border-border p-6 hover:border-accent-green/40 hover:-translate-y-0.5 transition-all soft-shadow">
-                <div className="w-11 h-11 rounded-xl bg-accent-green/10 grid place-items-center text-xl">
-                  {p.e}
+              <div className="h-full rounded-2xl bg-white border border-border p-6 hover:border-accent-green/40 hover:-translate-y-1 hover:shadow-lg transition-all soft-shadow">
+                <div className="w-11 h-11 rounded-xl bg-accent-green/10 grid place-items-center text-accent-green">
+                  <Icon name={p.icon} className="w-5 h-5" />
                 </div>
                 <h3 className="mt-5 font-display text-xl text-foreground">{p.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{p.d}</p>
@@ -287,7 +305,7 @@ function HowItWorks() {
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {t.how.steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 70}>
-              <div className="h-full rounded-2xl bg-white border border-border p-6 soft-shadow">
+              <div className="h-full rounded-2xl bg-white border border-border p-6 soft-shadow hover:-translate-y-1 transition-all">
                 <span className="font-display text-3xl text-accent-green font-bold">{s.n}</span>
                 <h3 className="mt-4 font-display text-lg">{s.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -300,48 +318,21 @@ function HowItWorks() {
   );
 }
 
-/* ============ FEATURE SHOWCASE ============ */
+/* ============ FEATURE SHOWCASE — real screenshots, minimal copy ============ */
 function FeatureShowcase() {
   const { t } = useLanguage();
-  const visuals = [
-    <RealPhone key="home" alt="Écran d'accueil Gool" surface="light">
-      <HomeScreen />
-    </RealPhone>,
-    <RealPhone key="feed" alt="Feed Gool" surface="light">
-      <FeedScreen />
-    </RealPhone>,
-    <RealPhone key="streak" alt="Écran Streak Gool" surface="dark">
-      <StreakScreen />
-    </RealPhone>,
-    <RealPhone key="post" alt="Détail d'un post communauté Gool" surface="light">
-      <PostScreen />
-    </RealPhone>,
-  ];
+  const images = [coachImg, homeImg, objectiveImg, leaderboardImg, groupsImg, feedImg];
   return (
     <section className="py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-5 md:px-8 space-y-28 md:space-y-36">
+      <div className="mx-auto max-w-6xl px-5 md:px-8 space-y-20 md:space-y-28">
         {t.features.rows.map((row, i) => (
           <Row
             key={row.tag}
             reverse={i % 2 === 1}
             tag={row.tag}
             title={row.title}
-            body={row.body}
-            bullets={row.bullets}
-            visual={visuals[i]}
-            afterBody={
-              i === 2 ? (
-                <blockquote
-                  className="mt-6 border-l-2 border-accent-green pl-4 font-display text-xl md:text-2xl text-foreground leading-snug"
-                  style={{ letterSpacing: "-0.02em" }}
-                >
-                  {t.features.quote}
-                  <footer className="mt-2 text-xs font-sans text-muted-foreground not-italic">
-                    {t.features.quoteFooter}
-                  </footer>
-                </blockquote>
-              ) : undefined
-            }
+            caption={row.caption}
+            image={images[i]}
           />
         ))}
       </div>
@@ -352,64 +343,47 @@ function FeatureShowcase() {
 function Row({
   tag,
   title,
-  body,
-  bullets,
-  visual,
+  caption,
+  image,
   reverse,
-  afterBody,
 }: {
   tag: string;
   title: string;
-  body: string;
-  bullets: string[];
-  visual: React.ReactNode;
+  caption: string;
+  image: string;
   reverse?: boolean;
-  afterBody?: React.ReactNode;
 }) {
   return (
     <div
-      className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center ${reverse ? "lg:[&>*:first-child]:order-2" : ""}`}
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center ${reverse ? "lg:[&>*:first-child]:order-2" : ""}`}
     >
       <Reveal>
         <span className="inline-block px-3 py-1 text-xs rounded-full bg-accent-green/10 text-accent-green font-semibold">
           {tag}
         </span>
-        <h3 className="mt-4 font-display text-3xl md:text-4xl" style={{ letterSpacing: "-0.03em" }}>
+        <h3
+          className="mt-4 font-display text-2xl md:text-3xl max-w-sm"
+          style={{ letterSpacing: "-0.03em" }}
+        >
           {title}
         </h3>
-        <p className="mt-4 text-muted-foreground leading-relaxed">{body}</p>
-        <ul className="mt-6 space-y-3">
-          {bullets.map((b) => (
-            <li key={b} className="flex items-start gap-2.5 text-sm">
-              <span className="mt-0.5 w-4 h-4 rounded-full bg-accent-green text-white grid place-items-center text-[10px] shrink-0">
-                ✓
-              </span>
-              <span className="text-foreground/80">{b}</span>
-            </li>
-          ))}
-        </ul>
-        {afterBody}
+        <p className="mt-3 text-muted-foreground max-w-sm leading-relaxed">{caption}</p>
       </Reveal>
       <Reveal delay={100}>
-        <div className="flex justify-center">{visual}</div>
+        <div className="flex justify-center">
+          <RealPhone alt={title}>
+            <img src={image} alt={title} className="w-full h-full object-cover" draggable={false} />
+          </RealPhone>
+        </div>
       </Reveal>
     </div>
   );
 }
 
-function RealPhone({
-  alt,
-  surface = "light",
-  children,
-}: {
-  alt: string;
-  surface?: "light" | "dark";
-  children: React.ReactNode;
-}) {
-  const bg = surface === "dark" ? "bg-[#0D0D0F]" : "bg-[#1A1A22]";
+function RealPhone({ alt, children }: { alt: string; children: React.ReactNode }) {
   return (
     <div
-      className={`relative w-full rounded-[2rem] ${bg} p-10 md:p-12 overflow-hidden`}
+      className="relative w-full max-w-[320px] rounded-[2rem] bg-[#1A1A22] p-8 md:p-10 overflow-hidden"
       style={{
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04), 0 30px 60px -30px rgba(0,0,0,0.45)",
       }}
@@ -424,7 +398,7 @@ function RealPhone({
         }}
       />
       <div className="relative flex justify-center">
-        <PhoneShell alt={alt} width={260} tilt={0} glow>
+        <PhoneShell alt={alt} width={240} tilt={0} glow>
           {children}
         </PhoneShell>
       </div>
@@ -453,9 +427,13 @@ function Loop() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
           {t.loop.steps.map((s, i) => (
             <Reveal key={s.t} delay={i * 80}>
-              <div className="h-full rounded-2xl bg-white border border-border p-6 relative soft-shadow">
-                <div className="text-3xl">{s.e}</div>
-                <p className="mt-4 text-xs uppercase tracking-wider text-muted-foreground">{s.label}</p>
+              <div className="h-full rounded-2xl bg-white border border-border p-6 relative soft-shadow hover:-translate-y-1 hover:rotate-[0.5deg] transition-all">
+                <div className="w-10 h-10 rounded-full bg-accent-green/10 grid place-items-center text-accent-green">
+                  <Icon name={s.icon} className="w-4.5 h-4.5" />
+                </div>
+                <p className="mt-4 text-xs uppercase tracking-wider text-muted-foreground">
+                  {s.label}
+                </p>
                 <h3 className="mt-1 font-display text-lg">{s.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
               </div>
@@ -527,7 +505,7 @@ function Testimonials() {
         <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-4">
           {t.testimonials.items.map((it, i) => (
             <Reveal key={it.name} delay={i * 70}>
-              <div className="h-full rounded-2xl bg-white border border-border p-6 soft-shadow">
+              <div className="h-full rounded-2xl bg-white border border-border p-6 soft-shadow hover:-translate-y-1 transition-all">
                 <p className="text-foreground/90 leading-relaxed">“{it.quote}”</p>
                 <div className="mt-6 flex items-center gap-3">
                   <span
@@ -537,45 +515,6 @@ function Testimonials() {
                     <p className="text-sm font-semibold text-foreground">{it.name}</p>
                     <p className="text-xs text-muted-foreground">{it.role}</p>
                   </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ============ ROADMAP ============ */
-function Roadmap() {
-  const { t } = useLanguage();
-  return (
-    <section className="py-24 md:py-32 bg-secondary/40 border-y border-border/60">
-      <div className="mx-auto max-w-5xl px-5 md:px-8">
-        <Reveal>
-          <p className="text-xs uppercase tracking-[0.2em] text-accent-green font-semibold">
-            {t.roadmap.tag}
-          </p>
-          <h2
-            className="mt-3 font-display text-4xl md:text-5xl max-w-2xl"
-            style={{ letterSpacing: "-0.035em" }}
-          >
-            {t.roadmap.title}
-          </h2>
-          <p className="mt-4 text-muted-foreground max-w-xl">{t.roadmap.subtitle}</p>
-        </Reveal>
-
-        <div className="mt-12 space-y-3">
-          {t.roadmap.items.map((it, i) => (
-            <Reveal key={it.t} delay={i * 60}>
-              <div className="flex items-start gap-4 rounded-2xl bg-white border border-border p-5 soft-shadow">
-                <span className="shrink-0 mt-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-accent-green/10 text-accent-green px-2.5 py-1">
-                  {it.status}
-                </span>
-                <div>
-                  <h3 className="font-display text-base text-foreground">{it.t}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{it.d}</p>
                 </div>
               </div>
             </Reveal>

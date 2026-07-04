@@ -45,13 +45,20 @@ export const COUNTRIES: CountryOption[] = [
 
 export const DEFAULT_COUNTRY = COUNTRIES[0];
 
-export function isValidPhoneForCountry(country: CountryOption, value: string) {
+/** Strips a single leading trunk "0" (e.g. "06 45 78 96 58" -> "645789658"),
+ *  matching how WhatsApp/most apps normalize a locally-dialed number into E.164. */
+function nationalDigits(value: string) {
   const digits = value.replace(/\D/g, "");
+  return digits.replace(/^0+/, "");
+}
+
+export function isValidPhoneForCountry(country: CountryOption, value: string) {
+  const digits = nationalDigits(value);
   return digits.length >= country.minLen && digits.length <= country.maxLen;
 }
 
 export function toE164(country: CountryOption, value: string) {
-  return `+${country.dial}${value.replace(/\D/g, "")}`;
+  return `+${country.dial}${nationalDigits(value)}`;
 }
 
 export function PhoneCountryInput({
@@ -59,6 +66,7 @@ export function PhoneCountryInput({
   onCountryChange,
   value,
   onChange,
+  onBlur,
   placeholder,
   invalid,
 }: {
@@ -66,6 +74,7 @@ export function PhoneCountryInput({
   onCountryChange: (c: CountryOption) => void;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   invalid?: boolean;
 }) {
@@ -93,6 +102,7 @@ export function PhoneCountryInput({
           inputMode="numeric"
           value={value}
           onChange={(e) => onChange(e.target.value.replace(/[^\d\s]/g, ""))}
+          onBlur={onBlur}
           placeholder={placeholder}
           className="flex-1 h-11 px-3 text-sm outline-none bg-transparent min-w-0"
         />
